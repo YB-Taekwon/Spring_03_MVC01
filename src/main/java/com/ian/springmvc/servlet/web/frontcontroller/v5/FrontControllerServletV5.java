@@ -99,4 +99,22 @@ public class FrontControllerServletV5 extends HttpServlet {
     private static MyView viewResolver(ModelView modelView) {
         return new MyView("/WEB-INF/views/" + modelView.getViewName() + ".jsp");
     }
+
+    /**
+     * 실제 Spring MVC 동작 순서
+     * 1. 핸들러 조회: 핸들러 매핑을 통해 요청 URL에 매핑된 핸들러(컨트롤러)를 조회
+     * 2. 핸들러 어댑터 조회: 핸들러를 실행할 수 있는 핸들러 어댑터 조회
+     * 3. 핸들러 어댑터 실행: 핸들러 어댑터를 실행
+     * 4. 핸들러 실행: 핸들러 어댑터가 실제 핸들러를 실행 -> 실제 요청 처리
+     * 5. ModelAndView 반환: 핸들러 어댑터는 핸들러가 반환하는 정보를 모델 앤 뷰로 변환하여 반환
+     * 6. ViewResolver 호출: 뷰 리졸버를 찾고 실행
+     * 7. View 반환: 뷰 리졸버는 뷰의 논리 이름을 실제 물리 경로로 변경한 후 렌더링 역할을 담당하는 뷰 객체를 반환
+     * 8. View 렌더링: 뷰 렌더링 및 클라이언트 응답
+     * <p>
+     * 프론트 컨트롤러: DispatcherServlet
+     * 핸들러 매핑: HandlerMapping
+     * 핸들러 어댑터: HandlerAdapter
+     * 뷰 리졸버: ViewResolver
+     * 뷰: View
+     */
 }
