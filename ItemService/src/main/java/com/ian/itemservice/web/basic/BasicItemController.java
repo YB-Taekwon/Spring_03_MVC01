@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -94,11 +95,26 @@ public class BasicItemController {
      * POST 요청 처리 후 바로 화면을 반환할 경우, 새로고침 시 동일한 POST 요청이 중복으로 처리될 수 있음
      * 이를 방지하기 위해 POST의 반환을 Redirect로 다른 url로 보낸 후 해당 url에서 GET으로 다시 조회하는 방식으로 화면을 보여줌
      */
-    @PostMapping("/add")
-    public String addItem(Item item) {
-        itemRepository.save(item);
+//    @PostMapping("/add")
+//    public String addItem(Item item) {
+//        itemRepository.save(item);
+//
+//        return "redirect:/basic/items/" + item.getId();
+//    }
 
-        return "redirect:/basic/items/" + item.getId();
+    /**
+     * RedirectAttributes
+     * 리다이렉트 시 url 주소에 파라미터 값을 같이 보내는 방식
+     * -> return "redirect:/basic/items/" + item.getId(); 와 같이 전송 시 id가 문자열인 경우 인코딩이 깨져서 정상적으로 동작하지 않기 때문
+     */
+    @PostMapping("/add")
+    public String addItem(Item item, RedirectAttributes redirectAttributes) {
+        Item saveItem = itemRepository.save(item);
+
+        redirectAttributes.addAttribute("itemId", saveItem.getId());
+        redirectAttributes.addAttribute("status", true);
+
+        return "redirect:/basic/items/{itemId}"; // http://localhost:8080/basic/items/3?status=true
     }
 
     @GetMapping("/{itemId}/edit")
